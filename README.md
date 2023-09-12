@@ -33,7 +33,7 @@ Since Help City is a private project, access is limited to authorized users only
 1. Clone the repository to your local machine.
 
 ```bash
-git clone https://github.com/your-username/help-city.git
+git clone https://github.com/CodeRinth/help-city.git
 ```
 
 

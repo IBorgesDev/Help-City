@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "77121574140",
+    "firebase_url": "https://helpcity-e76e0-default-rtdb.firebaseio.com",
+    "project_id": "helpcity-e76e0",
+    "storage_bucket": "helpcity-e76e0.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:77121574140:android:73bf60566ae74e1c593379",
+        "android_client_info": {
+          "package_name": "com.example.hpcty"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBGOsUhBoKZSm2_7Ir9OBDNOle_XGGXB0I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

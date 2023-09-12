@@ -1,16 +1,36 @@
-# hpcty
+# Help City - Noise Pollution Map Tracker
 
-A new Flutter project.
+**Author:** Marina Cabreira  
+**Organization:** CEMEP at 3Y
+
+## Introduction
+
+Welcome to the Help City Noise Pollution Map Tracker, a private application designed to help monitor and address noise pollution complaints within the city. This README provides an overview of the application, its features, and how to get started.
+
+## About Help City
+
+Help City is a Noise Pollution Map Tracker that allows users to report and track noise pollution complaints in their area. It serves as a valuable tool for both residents and local authorities to address noise pollution issues effectively.
+
+## Features
+
+### Noise Pollution Complaints Map
+
+Help City provides a user-friendly map interface where users can:
+
+- Report noise pollution complaints by pinpointing the location on the map.
+- View and search existing noise pollution complaints.
+- Get detailed information about each complaint, including date, time, and description.
+- Monitor the status of complaints, including resolution updates.
+
+### Privacy and Security
+
+As a private application, Help City prioritizes data privacy and security. All user data and complaint information are protected, and access is restricted to authorized individuals.
 
 ## Getting Started
 
-This project is a starting point for a Flutter application.
+Since Help City is a private project, access is limited to authorized users only. If you have the necessary permissions, follow these steps to get started:
 
-A few resources to get you started if this is your first Flutter project:
+1. Clone the repository to your local machine.
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+```bash
+git clone https://github.com/your-username/help-city.git

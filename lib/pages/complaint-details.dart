@@ -3,27 +3,31 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'address-search.dart';
-import 'firebase_service.dart';
+import 'address-search.dart'; // Importa um arquivo chamado 'address-search.dart'
+import 'firebase_service.dart'; // Importa um arquivo chamado 'firebase_service.dart'
 
+// Classe que define os detalhes de uma reclamação
 class ComplaintDetails {
-  String endereco;
-  final double latitude;
-  final double longitude;
-  String horaReclamacao;
-  bool isEnderecoValido = true;
+  String endereco; // Endereço da reclamação
+  final double latitude; // Latitude do local da reclamação
+  final double longitude; // Longitude do local da reclamação
+  String horaReclamacao; // Hora da reclamação
+  bool isEnderecoValido = true; // Sinalizador para indicar se o endereço é válido
 
+  // Construtor da classe
   ComplaintDetails({
     required this.endereco,
     required this.latitude,
     required this.longitude,
-    this.horaReclamacao = "08:00",
+    this.horaReclamacao = "08:00", // Valor padrão para a hora da reclamação
   });
 }
 
+// Classe que define a página de detalhes da reclamação
 class ComplaintDetailsPage extends StatefulWidget {
-  final ComplaintDetails details;
+  final ComplaintDetails details; // Detalhes da reclamação a serem exibidos na página
 
+  // Construtor da classe
   ComplaintDetailsPage({required this.details});
 
   @override
@@ -31,6 +35,7 @@ class ComplaintDetailsPage extends StatefulWidget {
 }
 
 class _ComplaintDetailsPageState extends State<ComplaintDetailsPage> {
+  // Lista de tipos de barulho para escolha
   final List<String> tiposDeBarulho = [
     "Selecione o tipo",
     "Gritaria",
@@ -39,17 +44,18 @@ class _ComplaintDetailsPageState extends State<ComplaintDetailsPage> {
     "Evento no local",
     "Animais",
     "Automóveis",
-    "Conversa alta",	
+    "Conversa alta",
   ];
-  String selectedTipoDeBarulho = "Selecione o tipo";
-  TextEditingController detalhesController = TextEditingController();
-  TextEditingController enderecoController = TextEditingController();
-  bool isEditingEndereco = false;
+
+  String selectedTipoDeBarulho = "Selecione o tipo"; // Tipo de barulho selecionado
+  TextEditingController detalhesController = TextEditingController(); // Controlador para o campo de detalhes
+  TextEditingController enderecoController = TextEditingController(); // Controlador para o campo de endereço
+  bool isEditingEndereco = false; // Sinalizador para indicar se o usuário está editando o endereço
 
   @override
   void initState() {
     super.initState();
-    _setHoraAtual();
+    _setHoraAtual(); // Define a hora atual quando a página é inicializada
   }
 
   @override
@@ -59,6 +65,7 @@ class _ComplaintDetailsPageState extends State<ComplaintDetailsPage> {
     super.dispose();
   }
 
+  // Define a hora atual nos detalhes da reclamação
   void _setHoraAtual() {
     final now = DateTime.now();
     final formattedTime =
@@ -68,6 +75,7 @@ class _ComplaintDetailsPageState extends State<ComplaintDetailsPage> {
     });
   }
 
+  // Inicia a edição do endereço
   void _startEditingEndereco() {
     setState(() {
       isEditingEndereco = true;
@@ -75,6 +83,7 @@ class _ComplaintDetailsPageState extends State<ComplaintDetailsPage> {
     });
   }
 
+  // Salva o endereço editado
   Future<void> _saveEditedEndereco() async {
     final isValid = await _validateEndereco(enderecoController.text);
 
@@ -88,7 +97,7 @@ class _ComplaintDetailsPageState extends State<ComplaintDetailsPage> {
       setState(() {
         widget.details.isEnderecoValido = false;
       });
-      // Exibir uma mensagem de erro ou feedback ao usuário.
+      // Exibe uma mensagem de erro ao usuário
       showDialog(
         context: context,
         builder: (context) {
@@ -109,17 +118,17 @@ class _ComplaintDetailsPageState extends State<ComplaintDetailsPage> {
     }
   }
 
+  // Valida se o endereço é válido usando a API do Google Maps
   Future<bool> _validateEndereco(String endereco) async {
     final apiKey =
-        'AIzaSyB2hJ15pQw_ODl-htVopPgE2A4jM-xIkMs'; // Substitua com sua chave da API do Google Maps
+        'AIzaSyB2hJ15pQw_ODl-htVopPgE2A4jM-xIkMs'; // Chave da API do Google Maps
     final response = await http.get(Uri.parse(
         'https://maps.googleapis.com/maps/api/geocode/json?address=$endereco&key=$apiKey'));
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      // Verifique se o JSON de resposta contém resultados válidos.
-      // Aqui, você deve analisar a resposta JSON para determinar se o endereço é válido.
-      // Neste exemplo, consideramos válido se houver pelo menos um resultado.
+      // Verifica se o JSON de resposta contém resultados válidos
+      // Neste exemplo, consideramos válido se houver pelo menos um resultado
       return data['results'] != null && data['results'].isNotEmpty;
     } else {
       return false;
@@ -264,6 +273,7 @@ class _ComplaintDetailsPageState extends State<ComplaintDetailsPage> {
                     if (selectedTipoDeBarulho != "Selecione o tipo") {
                       final firebaseService = FirebaseService();
                       try {
+                        // Envia a reclamação para o Firebase
                         await firebaseService.enviarReclamacao(
                           selectedTipoDeBarulho,
                           widget.details.endereco,
@@ -273,7 +283,7 @@ class _ComplaintDetailsPageState extends State<ComplaintDetailsPage> {
                           widget.details.longitude,
                         );
 
-                        // Navegar para a tela de confirmação
+                        // Navega para a tela de confirmação
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -281,7 +291,7 @@ class _ComplaintDetailsPageState extends State<ComplaintDetailsPage> {
                           ),
                         );
                       } catch (error) {
-                        // Tratar erros de envio para o Firebase
+                        // Trata erros ao enviar para o Firebase
                         showDialog(
                           context: context,
                           builder: (context) {
@@ -302,7 +312,7 @@ class _ComplaintDetailsPageState extends State<ComplaintDetailsPage> {
                         );
                       }
                     } else {
-                      // Exibir mensagem de erro ao usuário
+                      // Exibe uma mensagem de erro ao usuário
                       showDialog(
                         context: context,
                         builder: (context) {
@@ -334,6 +344,7 @@ class _ComplaintDetailsPageState extends State<ComplaintDetailsPage> {
   }
 }
 
+// Classe que define a tela de confirmação após o envio da reclamação
 class ConfirmationScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -356,18 +367,18 @@ class ConfirmationScreen extends StatelessWidget {
               style: TextStyle(fontSize: 18.0),
             ),
             SizedBox(height: 20.0),
-ElevatedButton(
-  onPressed: () {
-    // Navegue diretamente para a tela AddressSearch() e substitua a tela atual
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(
-        builder: (context) => AddressSearch(),
-      ),
-    );
-  },
-  child: Text('Voltar'),
-),
+            ElevatedButton(
+              onPressed: () {
+                // Navega de volta para a tela AddressSearch() e substitui a tela atual
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => AddressSearch(),
+                  ),
+                );
+              },
+              child: Text('Voltar'),
+            ),
           ],
         ),
       ),

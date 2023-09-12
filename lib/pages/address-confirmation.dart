@@ -1,11 +1,13 @@
-import 'dart:convert';
+// Importa as bibliotecas necessárias
+import 'dart:convert'; // Para lidar com JSON
 
 import 'package:flutter/material.dart';
-import 'package:hpcty/pages/location-complaint.dart';
-import 'package:http/http.dart' as http;
+import 'package:hpcty/pages/location-complaint.dart'; // Importa a página LocationComplaint
+import 'package:http/http.dart' as http; // Para fazer solicitações HTTP
 
+// Define um widget chamado AddressConfirmation que recebe um endereço como parâmetro
 class AddressConfirmation extends StatefulWidget {
-  final String endereco;
+  final String endereco; // O endereço a ser confirmado
 
   AddressConfirmation(this.endereco);
 
@@ -13,11 +15,13 @@ class AddressConfirmation extends StatefulWidget {
   _AddressConfirmationState createState() => _AddressConfirmationState();
 }
 
+// O estado da tela de confirmação de endereço
 class _AddressConfirmationState extends State<AddressConfirmation> {
-  bool? enderecoValido;
+  bool? enderecoValido; // Variável que armazena se o endereço é válido ou não
 
+  // Função para validar o endereço usando a API do Google Maps
   Future<void> validarEndereco() async {
-    final enderecoCompleto = widget.endereco;
+    final enderecoCompleto = widget.endereco; // Obtém o endereço da tela anterior
     final apiKey = 'AIzaSyB2hJ15pQw_ODl-htVopPgE2A4jM-xIkMs';
 
     final response = await http.get(
@@ -28,19 +32,19 @@ class _AddressConfirmationState extends State<AddressConfirmation> {
 
     if (response.statusCode == 200) {
       final data = json.decode(response.body);
-      // Verifique se a resposta contém resultados
+      // Verifica se a resposta da API contém resultados
       if (data['results'] != null && data['results'].isNotEmpty) {
         setState(() {
-          enderecoValido = true;
+          enderecoValido = true; // Define que o endereço é válido
         });
       } else {
         setState(() {
-          enderecoValido = false;
+          enderecoValido = false; // Define que o endereço não foi encontrado
         });
       }
     } else {
       setState(() {
-        enderecoValido = false;
+        enderecoValido = false; // Define que ocorreu um erro ao acessar a API
       });
     }
   }
@@ -48,6 +52,7 @@ class _AddressConfirmationState extends State<AddressConfirmation> {
   @override
   void initState() {
     super.initState();
+    // Chama a função de validação de endereço quando a tela é inicializada
     Future.delayed(Duration.zero, () {
       validarEndereco();
     });
@@ -57,50 +62,51 @@ class _AddressConfirmationState extends State<AddressConfirmation> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Confirmação de Endereço"),
+        title: Text("Confirmação de Endereço"), // Define o título da barra superior
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              "Endereço Digitado:",
+              "Endereço Digitado:", // Título para exibir o endereço digitado
               style: TextStyle(fontSize: 20),
             ),
             Text(
-              widget.endereco,
+              widget.endereco, // Exibe o endereço digitado pelo usuário
               style: TextStyle(fontSize: 18),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: 20), // Espaçamento
+            // Exibe uma mensagem dependendo da validação do endereço
             if (enderecoValido == true)
               Text(
-                "Endereço confirmado com sucesso!",
+                "Endereço confirmado com sucesso!", // Mensagem de sucesso
                 style: TextStyle(fontSize: 20, color: Colors.green),
               )
             else if (enderecoValido == false)
               Column(
                 children: [
                   Text(
-                    "Não foi possível encontrar este endereço.",
+                    "Não foi possível encontrar este endereço.", // Mensagem de erro
                     style: TextStyle(fontSize: 20, color: Colors.red),
                   ),
                   SizedBox(height: 20),
                   ElevatedButton(
                     onPressed: () {
-                      // Voltar para a tela AddressSearch
+                      // Volta para a tela AddressSearch quando o botão é pressionado
                       Navigator.pop(context);
                     },
-                    child: Text("Tente Novamente"),
+                    child: Text("Tente Novamente"), // Botão para tentar novamente
                   ),
                 ],
               )
             else
-              CircularProgressIndicator(), // Mostrar um indicador de carregamento enquanto a validação está em andamento
-            SizedBox(height: 20),
+              CircularProgressIndicator(), // Mostra um indicador de carregamento enquanto a validação está em andamento
+            SizedBox(height: 20), // Espaçamento
             ElevatedButton(
               onPressed: () {
                 if (enderecoValido == true) {
-                  // Navegue para a tela LocationComplaint e envie as informações
+                  // Navega para a tela LocationComplaint se o endereço for válido
                   Navigator.push(
                     context,
                     MaterialPageRoute(
@@ -112,7 +118,7 @@ class _AddressConfirmationState extends State<AddressConfirmation> {
                   );
                 }
               },
-              child: Text("Continuar"),
+              child: Text("Continuar"), // Botão para continuar
             ),
           ],
         ),

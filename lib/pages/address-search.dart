@@ -1,13 +1,17 @@
+// Importa as bibliotecas necessárias para criar um aplicativo Flutter
 import 'package:flutter/material.dart';
 import 'package:hpcty/pages/address-confirmation.dart';
 import 'package:hpcty/pages/complaint-map.dart';
 
+// A função principal que inicia o aplicativo
 void main() {
+  // Cria um aplicativo Flutter
   runApp(MaterialApp(
-    home: AddressSearch(),
+    home: AddressSearch(), // Define a tela inicial como AddressSearch
   ));
 }
 
+// Define um widget chamado AddressSearch que é uma tela do aplicativo
 class AddressSearch extends StatefulWidget {
   const AddressSearch({Key? key}) : super(key: key);
 
@@ -15,7 +19,9 @@ class AddressSearch extends StatefulWidget {
   _AddressSearchState createState() => _AddressSearchState();
 }
 
+// O estado da tela AddressSearch
 class _AddressSearchState extends State<AddressSearch> {
+  // Controladores para os campos de texto
   final TextEditingController bairroController = TextEditingController();
   final TextEditingController ruaController = TextEditingController();
   final TextEditingController numeroController = TextEditingController();
@@ -25,12 +31,12 @@ class _AddressSearchState extends State<AddressSearch> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Address Search"),
+        title: Text("Address Search"), // Define o título da barra superior
         actions: [
-          // Adicione um botão na parte superior direita da tela
+          // Adiciona um botão na parte superior direita da tela
           TextButton(
             onPressed: () {
-              // Navegue para a página ReclamacoesPage quando o botão for pressionado
+              // Navega para a página ReclamacoesPage quando o botão é pressionado
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -39,14 +45,15 @@ class _AddressSearchState extends State<AddressSearch> {
               );
             },
             child: Text(
-              "Ver Mapa de Reclamações",
-              style: TextStyle(color: Colors.white),
+              "Ver Mapa de Reclamações", // Texto exibido no botão
+              style: TextStyle(color: Colors.white), // Estilo do texto
             ),
           ),
         ],
       ),
       body: Column(
         children: [
+          // Campos de texto para inserir informações do endereço
           Padding(
             padding: const EdgeInsets.all(16.0),
             child: TextFieldWithPlaceholder(
@@ -75,16 +82,19 @@ class _AddressSearchState extends State<AddressSearch> {
               controller: cidadeController,
             ),
           ),
+          // Botão para continuar
           ElevatedButton(
             onPressed: () {
+              // Obtém os valores dos campos de texto
               final bairro = bairroController.text;
               final rua = ruaController.text;
               final numero = numeroController.text;
               final cidade = cidadeController.text;
 
+              // Cria uma string com o endereço completo
               final enderecoCompleto = "$bairro $rua $numero $cidade";
 
-              // Navegue para a segunda tela
+              // Navega para a segunda tela (AddressConfirmation) com o endereço completo
               Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -92,7 +102,7 @@ class _AddressSearchState extends State<AddressSearch> {
                 ),
               );
             },
-            child: Text("Continuar"),
+            child: Text("Continuar"), // Texto exibido no botão
           ),
         ],
       ),
@@ -101,6 +111,7 @@ class _AddressSearchState extends State<AddressSearch> {
 
   @override
   void dispose() {
+    // Libera os recursos dos controladores quando a tela é descartada
     bairroController.dispose();
     ruaController.dispose();
     numeroController.dispose();
@@ -109,6 +120,7 @@ class _AddressSearchState extends State<AddressSearch> {
   }
 }
 
+// Um widget reutilizável que cria um campo de texto com um rótulo (label)
 class TextFieldWithPlaceholder extends StatelessWidget {
   final String label;
   final TextEditingController controller;
@@ -120,8 +132,8 @@ class TextFieldWithPlaceholder extends StatelessWidget {
     return TextField(
       controller: controller,
       decoration: InputDecoration(
-        labelText: label,
-        labelStyle: TextStyle(color: Colors.grey[400]),
+        labelText: label, // Rótulo exibido acima do campo de texto
+        labelStyle: TextStyle(color: Colors.grey[400]), // Estilo do rótulo
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(15.0),
           borderSide: BorderSide(color: Colors.grey[400]!),

@@ -17,7 +17,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   const MyApp({Key? key});
 
-  // Este widget é a raiz do seu aplicativo.
+  // Este widget é a raiz do aplicativo.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

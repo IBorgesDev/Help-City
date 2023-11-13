@@ -1,49 +1,51 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
-
-// Primeiro, estamos importando uma biblioteca chamada 'firebase_database' que nos permite interagir com um banco de dados Firebase.
+import 'package:intl/intl.dart'; // Import the intl package
+import 'package:intl/date_symbol_data_local.dart'; // Import for localization
 
 class FirebaseService {
-  // Aqui estamos criando uma classe chamada 'FirebaseService' para organizar nossas operações com o Firebase.
-
+  final FirebaseAuth _auth = FirebaseAuth.instance;
   final _database = FirebaseDatabase.instance.ref();
-  // Criamos uma variável chamada '_database' para representar a conexão com o banco de dados Firebase.
 
   Future<void> enviarReclamacao(
-      String tipoDeBarulho, String endereco, String detalhes, String horaReclamacao, double latitude, double longitude) async {
-    // Este é um método chamado 'enviarReclamacao' que nos permite enviar uma reclamação para o banco de dados Firebase.
-    
-    try {
-      // Aqui começamos um bloco 'try-catch', que nos ajuda a lidar com erros caso algo dê errado.
+      String tipoDeBarulho,
+      String endereco,
+      String detalhes,
+      String horaReclamacao,
+      double latitude,
+      double longitude
+      ) async {
+    User? user = _auth.currentUser;
+    if (user != null) {
+      try {
+        String userId = user.uid;
+        DatabaseReference userComplaintsRef = _database.child('users').child(userId).child('REPORTS');
+        String newComplaintId = userComplaintsRef.push().key ?? 'new_complaint';
 
-      await _database.child('reclamacoes').push().set({
-        // Estamos acessando o banco de dados Firebase e dizendo que queremos armazenar informações sobre uma reclamação.
+        // Initialize locale
+        await initializeDateFormatting('pt_BR', null);
 
-        'tipoDeBarulho': tipoDeBarulho,
-        // 'tipoDeBarulho' é o tipo de barulho que está sendo relatado na reclamação.
+        // Format the date as "12 de agosto de 2023"
+        String formattedDate = DateFormat('d \'de\' MMMM \'de\' yyyy', 'pt_BR').format(DateTime.now());
 
-        'endereco': endereco,
-        // 'endereco' é o endereço onde o barulho está ocorrendo.
+        await userComplaintsRef.child(newComplaintId).set({
+          'tipoDeBarulho': tipoDeBarulho,
+          'endereco': endereco,
+          'detalhes': detalhes,
+          'horaReclamacao': horaReclamacao,
+          'latitude': latitude,
+          'longitude': longitude,
+          'data': formattedDate // Use the formatted date here
+        });
 
-        'detalhes': detalhes,
-        // 'detalhes' são informações adicionais sobre a reclamação.
-
-        'horaReclamacao': horaReclamacao,
-        // 'horaReclamacao' é o momento em que a reclamação está sendo feita.
-
-        'latitude': latitude,
-        // 'latitude' é a coordenada de latitude da localização da reclamação.
-
-        'longitude': longitude,
-        // 'longitude' é a coordenada de longitude da localização da reclamação.
-      });
-    } catch (error) {
-      // Se algo der errado ao enviar a reclamação, capturamos o erro aqui.
-
-      print('Erro ao enviar reclamação: $error');
-      // Imprimimos uma mensagem de erro com informações sobre o que deu errado.
-
-      throw error;
-      // E lançamos o erro novamente para que possa ser tratado em outro lugar, se necessário.
+        print('Reclamação enviada com sucesso.');
+      } catch (error) {
+        print('Erro ao enviar reclamação: $error');
+        throw error;
+      }
+    } else {
+      print('Nenhum usuário está logado.');
+      throw Exception('UserNotLoggedIn');
     }
   }
 }

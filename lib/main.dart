@@ -1,6 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hpcty/pages/address-search.dart';
+import 'package:hpcty/pages/splashscreen.dart';
+
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized(); // Garante a inicialização do Flutter.
@@ -21,9 +23,13 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+
       debugShowCheckedModeBanner: false,
-      theme: ThemeData(fontFamily: 'Poppins'),
-      home:  AddressSearch(),
+      theme: ThemeData(fontFamily: 'Poppins',
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home:  Splash(),
     );
   }
 }
